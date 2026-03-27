@@ -5,6 +5,6 @@ account: ericbjchen
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16998379
-bundleId: 11769690
+bundleId: 11769836
 url: https://ericbjchen.shinyapps.io/lcms_shiny/
 version: 1

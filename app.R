@@ -49,16 +49,19 @@ ui <- fluidPage(
       fileInput("file1", "1. Please upload a CSV file", accept = c(".csv")),
       
       # Standard group setting
-      textInput("standard_strain", "2. Set Standard Group", value = "B73"),
+      textInput("standard_strain", "2. Set Standard Group", value = ""),
+      
+      # Minimum number of points for statistical analysis
+      numericInput("n_points", "3. Minimum Number of Points", value = 3, min = 2, max = 10),
       
        # Statistical test method selection
-      radioButtons("stat_method", "3. Select Statistical Test Method", 
+      radioButtons("stat_method", "4. Select Statistical Test Method", 
                    choices = list("t-test (Student's t-test)" = "t_test",
                                   "Wilcoxon test (Mann-Whitney U)" = "wilcox_test"), 
                    selected = "t_test"),
 
       # Execute button
-      actionButton("run_btn", "4. Start Analysis", class = "btn-primary", style = "width: 100%; margin-bottom: 20px;"),
+      actionButton("run_btn", "5. Start Analysis", class = "btn-primary", style = "width: 100%; margin-bottom: 20px;"),
       
       # Download button (visible only after analysis is complete)
       uiOutput("download_ui"),
@@ -130,7 +133,7 @@ server <- function(input, output, session) {
         cols <- c(grep(colnames(hplc_koda), pattern = 'pmol'))
         hplc_koda <- cbind(meta_koda, hplc_koda[, cols])
 
-
+        n_points <- input$n_points
         standard <- input$standard_strain
         if(!any(hplc_koda$strain %in% standard)) {stop("Standard group setting error. Please ensure the input standard name matches the strain name in the data.")}
         # Prepare an empty list for plots
@@ -155,19 +158,21 @@ server <- function(input, output, session) {
           for(i in 1:10)  {
             sub <- sub %>% group_by(group) %>%
               mutate(mean = mean(value, na.rm = TRUE), 
-                     sd = sd(value, na.rm = TRUE), 
-                     z_score = (value - mean) / sd, 
-                     n = sum(!is.na(value)), 
-                     all_na_z = all(is.na(z_score))) %>%
+                  sd = sd(value, na.rm = TRUE), 
+                  z_score = (value - mean) / sd, 
+                  n = sum(!is.na(value)), 
+                  all_na_z = all(is.na(z_score))) %>%
               slice(
-                if (isTRUE(first(all_na_z)) || coalesce(first(n), 0) <= 3) {
+                if (
+                  first(all_na_z) ||        # case 1: 全 NA → 全留
+                  first(n) <= n_points      # case 2: 樣本太少 → 全留
+                ) {
                   row_number()
                 } else {
-                  idx_to_remove <- which.max(z_score)
-                  if(length(idx_to_remove) > 0) -idx_to_remove else row_number()
+                  -which.max(z_score)        # case 3: 正常情況 → 移除最大 z
                 }
               ) %>%
-              ungroup() %>% as.data.frame()
+              as.data.frame()
           }
           
           plot_df <- sub %>% group_by(group) %>%
