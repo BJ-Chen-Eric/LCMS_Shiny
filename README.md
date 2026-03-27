@@ -1,5 +1,4 @@
 # LC-MS Automated Analysis Tool
-![Visitors](https://api.visitorbadge.io/api/visitors?path=ericbjchen/LCMS_Shiny&countColor=%23263759)
 
 This is a lightweight web application built with R Shiny and designed for laboratory researchers. By uploading a properly formatted CSV file, you can automatically remove outliers from LC-MS metabolite data, run statistical tests (`t-test` / `Wilcoxon test`), and generate publication-ready bar plots and scatter plots with a single click.
 

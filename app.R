@@ -78,7 +78,7 @@ ui <- fluidPage(
           # tags$li("Metabolite compounds should start from the 6th column."),
           tags$li("Example ", tags$code("Genotype"), ": ", tags$i("B73-W0, double-W2")),
           tags$li("Example ", tags$code("Treatment"), ": ", tags$i("KODA, KODA")),
-          tags$li("Example ", tags$code("Compound"), ": ", tags$i("pmol 10-HOD/ g FW, pmol JA/ g FW"))
+          tags$li("Example ", tags$code("Compound"), " column name: ", tags$i("pmol 10-HOD/ g FW, pmol JA/ g FW"))
         )
       )
     ),
