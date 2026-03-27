@@ -74,10 +74,11 @@ ui <- fluidPage(
         tags$ul(style = "padding-left: 20px; line-height: 1.6;",
           tags$li("The uploaded file must be in ", tags$b(".csv"), " format."),
           tags$li("The file ", tags$b("MUST"), " contain these exact column names (case-sensitive): ", 
-                  tags$br(), tags$code("Genotype"), ", ", tags$code("Treatment"), ", ", tags$code("Rep"), "."),
+                  tags$br(), tags$code("Genotype"), ", ", tags$code("Treatment"), ", ", tags$code("Rep"), ", ", tags$code("pmol [Compound]/ g FW"), ". The Compound name can be any string but must start with 'pmol'."),
           # tags$li("Metabolite compounds should start from the 6th column."),
           tags$li("Example ", tags$code("Genotype"), ": ", tags$i("B73-W0, double-W2")),
-          tags$li("Example ", tags$code("Treatment"), ": ", tags$i("KODA, KODA"))
+          tags$li("Example ", tags$code("Treatment"), ": ", tags$i("KODA, KODA")),
+          tags$li("Example ", tags$code("Compound"), ": ", tags$i("pmol 10-HOD/ g FW, pmol JA/ g FW"))
         )
       )
     ),
